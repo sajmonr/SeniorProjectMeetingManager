@@ -1,0 +1,18 @@
+<div class="container">
+  <div class="row" style="max-height: 600px;">
+    <div class="col">
+      <div class="calendar-wrapper">
+        <full-calendar
+          defaultView="timeGridWeek"
+          [plugins]="calendarPlugins"
+          [allDaySlot]="false"
+          height="parent"
+          [buttonText]="{today: 'This week'}"
+          [selectable]="true"
+          (select)="onSelect($event)"
+          [events]="calendarEvents"
+        ></full-calendar>
+      </div>
+    </div>
+  </div>
+</div>
