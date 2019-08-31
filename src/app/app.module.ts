@@ -7,6 +7,8 @@ import { NavbarMenuComponent } from './home/navbar-menu/navbar-menu.component';
 import { HomeComponent } from './home/home.component';
 import { CalendarComponent } from './home/calendar/calendar.component';
 import {FullCalendarModule} from '@fullcalendar/angular';
+import {AuthService} from './shared/auth.service';
+import {CalendarService} from './shared/calendar.service';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,7 @@ import {FullCalendarModule} from '@fullcalendar/angular';
     AppRoutingModule,
     FullCalendarModule
   ],
-  providers: [],
+  providers: [AuthService, CalendarService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
