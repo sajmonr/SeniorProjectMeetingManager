@@ -6,34 +6,63 @@ declare var gapi: any;
   providedIn: 'root'
 })
 export class AuthService {
+  private isInitialized = false;
 
-  constructor() {
+  constructor(){
     this.initClient();
   }
 
-  login() {
-    gapi.auth2.getAuthInstance().signIn();
-  }
-
-  logout(){
-    gapi.auth2.getAuthInstance().signOut().then(() => {
-      console.log('signed out');
+  login(): Promise<boolean> {
+    return new Promise<boolean>((resolve) => {
+      gapi.auth2.getAuthInstance().signIn().then(() => {
+        resolve(gapi.auth2.getAuthInstance().isSignedIn.get());
+      });
     });
   }
 
-  isSignedIn(): boolean{
-    return gapi.auth2.getAuthInstance().isSignedIn();
+  logout(): Promise<boolean>{
+    return new Promise<boolean>(resolve => {
+      gapi.auth2.getAuthInstance().signOut().then(() => {
+        resolve(!gapi.auth2.getAuthInstance().isSignedIn.get());
+      });
+    });
   }
 
-  private initClient() {
-    gapi.load('client', () => {
-      gapi.client.init({
-        clientId: '148928877653-8tbj6fvn0tpnl3834ds8g82q925f54dn.apps.googleusercontent.com',
-        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
-        scope: 'https://www.googleapis.com/auth/calendar'
-      })
-      gapi.client.load('calendar', 'v3', () => console.log('loaded calendar'));
+  isAuthenticated(): Promise<boolean>{
+    return new Promise<boolean>(resolve => {
+      if(!this.isInitialized)
+        this.initClient(() => resolve(gapi.auth2.getAuthInstance().isSignedIn.get()));
+      else
+        resolve(gapi.auth2.getAuthInstance().isSignedIn.get());
     });
+  }
+
+  getUserName(): string{
+    return gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getName();
+  }
+
+  private initClient(afterInit?: () => void) {
+    if(!this.isInitialized) {
+      gapi.load('client', () => {
+        gapi.client.init({
+          clientId: '148928877653-8tbj6fvn0tpnl3834ds8g82q925f54dn.apps.googleusercontent.com',
+          discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
+          scope: 'https://www.googleapis.com/auth/calendar'
+        }).then(() => {
+          this.isInitialized = true;
+          if(afterInit)
+            afterInit();
+          this.loadScopes();
+        });
+      });
+    }else{
+      if(afterInit)
+        afterInit();
+    }
+  }
+
+  private loadScopes(){
+    gapi.client.load('calendar', 'v3', () => console.log('loaded calendar'));
   }
 
   async getCalendarList(){

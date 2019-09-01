@@ -9,20 +9,25 @@ import { CalendarComponent } from './home/calendar/calendar.component';
 import {FullCalendarModule} from '@fullcalendar/angular';
 import {AuthService} from './shared/auth.service';
 import {CalendarService} from './shared/calendar.service';
+import { AccountComponent } from './account/account.component';
+import { LoginComponent } from './account/login/login.component';
+import {AuthGuard} from './auth-guard.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarMenuComponent,
     HomeComponent,
-    CalendarComponent
+    CalendarComponent,
+    AccountComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FullCalendarModule
   ],
-  providers: [AuthService, CalendarService],
+  providers: [AuthService, CalendarService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

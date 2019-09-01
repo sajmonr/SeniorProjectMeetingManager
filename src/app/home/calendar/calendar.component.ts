@@ -11,26 +11,22 @@ import {CalendarEvent} from '../../models/calendar-event.model';
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.less']
 })
-export class CalendarComponent{
+export class CalendarComponent implements OnInit{
   calendarPlugins = [dayGridPlugin, timeGridPlugin, interactionPlugin];
   calendarEvents = [];
 
   constructor(private auth: AuthService, private calendar: CalendarService) { }
 
+  ngOnInit(): void {
+    this.reloadEvents();
+  }
+
   onSelect(eventData){
     console.log(eventData);
   }
 
-  onLogin(){
-    this.auth.login();
-  }
-
-  onGetCalendar(){
+  private reloadEvents(){
     this.calendar.getCalendarEvents().then(events => { this.setEvents(events); });
-  }
-
-  onLogout(){
-    this.auth.logout();
   }
 
   private addEvent(event: CalendarEvent){
