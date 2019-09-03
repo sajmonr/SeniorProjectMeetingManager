@@ -22,7 +22,9 @@ export class CalendarComponent implements OnInit{
   }
 
   onSelect(eventData){
-    console.log(eventData);
+    this.calendar.insertEvent(eventData.start, eventData.end, 'Just a test meeting').then(() => {
+      this.reloadEvents();
+    });
   }
 
   private reloadEvents(){

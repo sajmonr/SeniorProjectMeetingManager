@@ -60,4 +60,24 @@ export class CalendarService{
     await gapi.client.calendar.calendars.insert({summary: this.calendarName});
   }
 
+  async insertEvent(start: Date, end: Date, title: string) {
+    const calendar = await this.getCalendar();
+
+    if(calendar == null)
+      return;
+
+    await gapi.client.calendar.events.insert({
+      calendarId: calendar.id,
+      start: {
+        dateTime: start.toISOString()
+      },
+      end: {
+        dateTime: end.toISOString()
+      },
+      summary: title
+    });
+  }
+  private hoursFromNow(n){
+    return new Date(Date.now() + n * 1000 * 60 * 60 ).toISOString();
+  }
 }
