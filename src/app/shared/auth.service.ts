@@ -47,7 +47,7 @@ export class AuthService {
         gapi.client.init({
           clientId: '148928877653-8tbj6fvn0tpnl3834ds8g82q925f54dn.apps.googleusercontent.com',
           discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
-          scope: 'https://www.googleapis.com/auth/calendar'
+          scope: 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/presentations.readonly https://www.googleapis.com/auth/drive'
         }).then(() => {
           this.isInitialized = true;
           if(afterInit)
@@ -63,5 +63,13 @@ export class AuthService {
 
   private loadScopes(){
     gapi.client.load('calendar', 'v3', () => console.log('loaded calendar'));
+    gapi.client.load('drive', 'v3', () => {
+      console.log('loaded drive');
+      gapi.client.drive.files.list({
+        'pageSize': 10
+      }).execute((data) => {
+        console.log(data.files);
+      });
+    });
   }
 }

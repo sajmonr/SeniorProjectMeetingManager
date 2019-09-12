@@ -23,7 +23,6 @@ export class NavbarMenuComponent {
 
   private onLogout(){
     this.auth.logout().then(success => {
-      console.log(success);
       if(success)
         this.router.navigate(['/account']);
     })

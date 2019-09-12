@@ -6,6 +6,8 @@ import {AuthService} from '../../shared/auth.service';
 import {CalendarService} from '../../shared/calendar.service';
 import {CalendarEvent} from '../../models/calendar-event.model';
 
+declare var gapi: any;
+
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
